@@ -1,0 +1,31 @@
+.toolNav {
+    height: 40px;
+    padding: 4px;
+    width: 100%;
+    background-color: black;
+    color: white;
+
+}
+.toolNavTitle {
+    padding: 0 4px;
+    display: inline-flex;
+    align-items: center;
+    height: 32px;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.toolNavLink {
+    height: 32px;
+    font-size: 16px;
+    float: right;
+    vertical-align: middle;
+    padding: 8px;
+    cursor: pointer;
+}
+
+.toolNavLink a {
+    color: inherit;
+    text-decoration: inherit;
+}

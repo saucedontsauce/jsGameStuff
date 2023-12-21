@@ -1,0 +1,88 @@
+.creatorWrap {
+    padding: 0.5rem 2rem;
+    border: 1px solid red;
+}
+
+canvas {
+    outline:1px solid black ;
+    width: 100%;
+}
+
+.createNav {
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+    outline: 1px solid black;
+}
+
+.createNav * {
+    display: block;
+    float: left;
+}
+.imgBittage input {
+    width: 20px;
+}
+
+
+
+#downloadModal {
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: rgba(196, 190, 190, 0.9);
+    width: 100%;
+    height: 100%;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    transition: all 1s linear;
+}
+
+.downloadBox {
+    background: #F9F9F9;
+    padding: 1rem 1.75rem;
+    border-radius: 0.5rem;
+
+}
+
+.downloadHead {
+    display: flex;
+    justify-content: space-between;
+}
+
+.downloadHead h3 {
+    padding-right: 1.5rem;
+}
+
+.downloadHead p {
+    cursor: pointer;
+}
+
+.downloadForm {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 0.5rem;
+}
+
+.downloadForm a{
+float: inline-end;
+text-decoration: none;
+color: inherit;
+font-weight: bolder;
+}
+
+.downloadIntro p{
+    max-width: 300px;
+    text-wrap: wrap;
+}
+
+#dlBtn {
+    cursor: pointer;
+}
+
+canvas {
+    width: 100%;
+}
