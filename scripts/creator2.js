@@ -3,34 +3,25 @@ let canvas = document.getElementById('targetCanvas');
 let cvs = canvas.getContext('2d');
 let colSel = document.getElementById('colorSelector');
 let bitsel = document.getElementById('imgBit');
+let gridSel = document.getElementById('gridSelector');
 
 let bittage = 32;
 let canvas_dim;
 let local_block = [];
-let px_rt;
-let colour;
+
 
 
 
 // build the array to hold local for redraws
 const initArr = () => {
     local_block = [];
-    px_rt = cvs.canvas.width / bittage;
     for (let i = 0; i < bittage; i++) {
         let row = []
         for (let j = 0; j < bittage; j++) {
             let bit = {
                 location: { x: 0, y: 0 },
-                pix_loc: { },
-                colour: null,
-                width: px_rt
+                colour: undefined,
             }
-            bit.location.x = j;
-            bit.location.y = i;
-            bit.pix_loc.xstart = j *px_rt;
-            bit.pix_loc.ystart = i*px_rt;
-            bit.pix_loc.xend = bit.pix_loc.xstart + px_rt;
-            bit.pix_loc.yend = bit.pix_loc.ystart + px_rt;
             row.push(bit);
         }
         local_block.push(row)
@@ -62,38 +53,41 @@ const resizeCanvas = () => {
 // draw grid 
 
 const drawGrid = () => {
-    cvs.clearRect(0, 0, canvas.width, canvas.height);
+    cvs.clearRect(0, 0, cvs.canvas.width, cvs.canvas.height);
     for (let i = 0; i < bittage; i++) {
         for (let j = 0; j < bittage; j++) {
             let thisPix = local_block[i][j]
-            let myposx = thisPix.pix_loc.xstart;
-            let myposy = thisPix.pix_loc.ystart;
-            let myposxend = thisPix.pix_loc.xend;
-            let myposyend = thisPix.pix_loc.yend;
-            cvs.beginPath();
-            cvs.rect(myposx, myposy, myposxend, myposyend)
-            cvs.stroke()
+            let pixel_width = cvs.canvas.width / bittage;
+            let xstart = j * pixel_width;
+            let ystart = i * pixel_width;
+            if (gridSel.checked == true) {
+                cvs.beginPath();
+                cvs.rect(xstart, ystart, pixel_width, pixel_width)
+                cvs.stroke()
+            } 
+             if (thisPix.colour != undefined){
+                cvs.beginPath();
+                cvs.rect(xstart, ystart, pixel_width, pixel_width);
+                cvs.fillStyle = thisPix.colour;
+                cvs.fill()
+            }
+
         };
     };
 }
-//draw cell
-const drawCell = (x,y) => {
-    let thisPix = local_block[y][x];
-    console.log(thisPix);
-    cvs.rect(thisPix.pix_loc.xstart, thisPix.pix_loc.ystart, thisPix.width, thisPix.width);
-    cvs.fillStyle = colour;
-    cvs.fill()
-}
+
+
 
 // handle canvas click
 const handleCanvasClick = (e) => {
     let pix_wid = cvs.canvas.width / bittage;
-    colour = colSel.value;
-    x = Math.floor(e.offsetX/pix_wid);
-    y = Math.floor(e.offsetY/pix_wid);
-    local_block[y][x].colour = colour;
-    console.log(`x,y ${x},${y} colour:${colour}`);
-    drawCell(x,y);
+    x = Math.floor(e.offsetX / pix_wid);
+    y = Math.floor(e.offsetY / pix_wid);
+    local_block[y][x].colour = colSel.value;
+    console.log(local_block[y][x]);
+    console.log(colSel.value)
+    console.log(`x,y ${x},${y} colour:${local_block[y][x].colour}`);
+    reinit();
 }
 
 
@@ -101,30 +95,41 @@ const handleCanvasClick = (e) => {
 
 // start
 const init = () => {
+    console.log('init called');
+    cvs.clearRect(0, 0, cvs.canvas.width, cvs.canvas.height)
+    console.log('canvas cleared');
     resizeCanvas();
     initArr();
     drawGrid();
 };
+const reinit = ()=>{
+    console.log('reinit called');
+    cvs.clearRect(0, 0, cvs.canvas.width, cvs.canvas.height)
+    console.log('canvas cleared');
+    resizeCanvas();
+    drawGrid();
+}
 window.onload = init;
 // listener dump 
-window.addEventListener('resize', () => {
-    console.log('resize');
-    resizeCanvas();
-})
+window.addEventListener('resize', reinit)
 canvas.addEventListener('mousedown', handleCanvasClick)
 document.getElementById('dlBtn').addEventListener('click', () => {
     console.log('open modal');
     document.getElementById('downloadModal').style.display = 'flex'
 });
 document.getElementById("closeModal").addEventListener('click', () => {
-    console.log('close modal')
-    document.getElementById('downloadModal').style.display = 'none'
+    console.log('close modal');
+    document.getElementById('downloadModal').style.display = 'none';
+
 });
-colSel.addEventListener('change', ()=>{
+
+colSel.addEventListener('change', () => {
     colour = colSel.value;
 })
-bitsel.addEventListener('change', (e)=>{
+bitsel.addEventListener('change', (e) => {
     console.log('bittage change')
     bittage = e.target.value;
     init()
 })
+
+gridSel.addEventListener('change', reinit)
